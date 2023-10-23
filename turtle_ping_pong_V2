@@ -1,0 +1,124 @@
+from turtle import *
+from time import *
+
+class Sprite(Turtle):
+    def __init__(self, x, y, color='white', step=5, shape='square', speed=10):
+        super().__init__()
+        self.penup()
+        self.shape(shape)
+        self.color(color)
+        self.speed(0)
+        self.goto(x, y)
+        self.x = x
+        self.y = y
+        self.move = step
+        self.speed = speed
+    def is_collide(self, sprite):
+        dist = self.distance(sprite.xcor(), sprite.ycor())
+        if dist < 30:
+            return True 
+        else:
+            return False
+
+    def move_left(self):
+        self.x -= self.move
+        self.goto(self.x, self.y)
+    def move_right(self):
+        self.x += self.move
+        self.goto(self.x, self.y)
+    def move_up(self):
+        self.y += self.move
+        self.goto(self.x, self.y)
+    def move_down(self):
+        self.y -= self.move
+        self.goto(self.x, self.y)
+
+player1 = Sprite(-220, 0)
+player2 = Sprite(220, 0)
+ball = Sprite(0, 0, 'white', 15, 'circle', 2)
+t1 = Turtle()
+t1.penup()
+t1.speed(9999)
+t1.goto(-260, 190)
+t1.begin_fill()
+t1.color('grey')
+t1.pendown()
+t1.goto(260, 190)
+t1.goto(260, -190)
+t1.goto(-260, -190)
+t1.goto(-260, 190)
+t1.end_fill()
+t1.hideturtle()
+t01 = Turtle()
+t01.penup()
+t01.speed(9999)
+t01.goto(-250, 180)
+t01.begin_fill()
+t01.color('grey','black')
+t01.pendown()
+t01.goto(250, 180)
+t01.goto(250, -180)
+t01.goto(-250, -180)
+t01.goto(-250, 180)
+t01.end_fill()
+t01.hideturtle()
+
+t00 = Turtle()
+t00.speed(9999)
+t00.penup()
+t00.goto(-230, 160)
+t00.pendown()
+t00.goto(230, 160)
+t00.goto(230, -160)
+t00.goto(-230, -160)
+t00.goto(-230, 160)
+t00.hideturtle()
+
+def lose(t0, total):
+    player1.hideturtle()
+    player2.hideturtle()
+    ball.penup()
+    ball.goto(-90, 50)
+    ball.write('LOSE', font=('sans-serif', 50, 'normal'))
+    ball.goto(-120, -50)
+    ball.write('SCORE:', font=('sans-serif', 30, 'normal'))
+    ball.goto(30, -50)
+    ball.write(total, font=('sans-serif', 30, 'normal'))
+    ball.goto(0, 0)
+    while True:
+        ball.lt(1)
+
+start = time()
+
+while True:
+    a1 = 230
+    b1 = -230
+    a = 230
+    b = -230
+    scr = player1.getscreen();scr.listen()
+    scr.onkey(player1.move_up, 'W')
+    scr.onkey(player1.move_down, 'S')
+    scr.onkey(player2.move_up, 'P')
+    scr.onkey(player2.move_down, 'L')
+    if player1.is_collide(ball):
+        ball.lt(150)
+        ball.fd(30)
+    elif player2.is_collide(ball):
+        ball.lt(150)
+        ball.fd(30)
+    elif ball.ycor() >= 180:
+        ball.lt(90)
+        ball.fd(20)
+    elif ball.ycor() <= -180:
+        ball.lt(90)
+        ball.fd(20)
+    elif ball.xcor() >= a:
+        end = time()
+        total = round(end - start, 2)
+        lose(ball, total)
+    elif ball.xcor() <= b:
+        end = time()
+        total = round(end - start, 2)
+        lose(ball, total)
+    else:
+        ball.fd(20)
